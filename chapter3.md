@@ -121,4 +121,88 @@ Connecting to WiFi...
 .....
 WiFi Connected!
 IP Address: 192.168.1.100
+.....
+```
+# Interfacing LED/Buzzer with Arduino and Raspberry Pi
+
+In this will show you how to interface an LED (or a buzzer) with both an Arduino and a Raspberry Pi. We will also write a simple program that turns the LED on for 1 second every 2 seconds.
+
+---
+
+## **1. Using Arduino**
+
+### **Hardware Setup**
+- **LED/Buzzer:** Connect the positive (longer) leg of the LED (or the positive terminal of the buzzer) to digital pin **13** of the Arduino.
+- **Resistor:** For an LED, connect a current-limiting resistor (typically 220Ω to 330Ω) in series.
+- **Ground:** Connect the negative leg of the LED (or the negative terminal of the buzzer) to the GND pin of the Arduino.
+
+### **Arduino Code**
+Upload the following code using the Arduino IDE:
+
+```cpp
+void setup() {
+  // Initialize digital pin 13 as an output.
+  pinMode(13, OUTPUT);
+}
+
+void loop() {
+  // Turn the LED/Buzzer on
+  digitalWrite(13, HIGH);
+  delay(1000); // Wait for 1 second
+
+  // Turn the LED/Buzzer off
+  digitalWrite(13, LOW);
+  delay(1000); // Wait for 1 second (total cycle = 2 seconds)
+}
+```
+## **2. Using Raspberry Pi**
+
+### **Hardware Setup**
+- **LED/Buzzer:** Connect the positive leg of the LED (or buzzer) to a GPIO pin (e.g., **GPIO 18**).
+- **Resistor:** For an LED, use a current-limiting resistor (typically 220Ω to 330Ω).
+- **Ground:** Connect the negative leg of the LED (or buzzer) to one of the Raspberry Pi's GND pins.
+
+### **Python Code**
+Install the **RPi.GPIO** library if not already installed:
+
+```bash
+sudo apt-get update
+sudo apt-get install python3-rpi.gpio
+```
+
+Then, create a Python script (e.g., `led_buzzer.py`) with the following code:
+
+```python
+import RPi.GPIO as GPIO
+import time
+
+# Use BCM GPIO numbering
+GPIO.setmode(GPIO.BCM)
+
+# Define the GPIO pin (e.g., 18)
+LED_PIN = 18
+
+# Set up the GPIO pin as an output
+GPIO.setup(LED_PIN, GPIO.OUT)
+
+try:
+    while True:
+        # Turn the LED/Buzzer on
+        GPIO.output(LED_PIN, GPIO.HIGH)
+        time.sleep(1)  # Wait for 1 second
+
+        # Turn the LED/Buzzer off
+        GPIO.output(LED_PIN, GPIO.LOW)
+        time.sleep(1)  # Wait for 1 second (total cycle = 2 seconds)
+except KeyboardInterrupt:
+    # Cleanup GPIO settings before exiting
+    GPIO.cleanup()
+```
+
+*Explanation:*  
+- We use the **RPi.GPIO** library to control the GPIO pins.
+- The code sets up GPIO 18 as an output pin.
+- The program then continuously turns the LED (or buzzer) on for 1 second and off for 1 second.
+- Press **Ctrl+C** to stop the script, which will trigger the cleanup of GPIO settings.
+
 
